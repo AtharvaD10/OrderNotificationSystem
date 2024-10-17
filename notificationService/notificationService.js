@@ -1,24 +1,21 @@
-const Stomp = require('stompjs');
+const stompjs = require('stompjs');
 
 const host = 'localhost';
-const port = 61613; // Default STOMP port
-const user = 'admin'; // Default user
-const pass = 'admin'; // Default password
+const port = 61613;
+const user = 'admin';
+const pass = 'admin';
 
-const client = Stomp.overTCP(host, port);
+const client = stompjs.overTCP(host,port);
 
-client.connect(user, pass, (frame) => {
-    console.log('Notification Service Connected: ' + frame);
+client.connect(user,pass,(mesg)=>{
+    console.log("Notification service connected" +mesg);
 
-    // Subscribe to the orders queue
-    client.subscribe('/queue/orders', (message) => {
+    client.subscribe('/queue/orders',(message)=>{
         const order = JSON.parse(message.body);
-        console.log('Received order:', order);
-        
-        // Simulate sending a notification
-        console.log(`Notification: Order ${order.id} for ${order.quantity} ${order.item}(s) has been received.`);
-    });
+        console.log("Receive order:",order);
 
-}, (error) => {
-    console.error('Connection error: ' + error);
-});
+        console.log(`Notification: Order ${order.id} for ${order.quantity} ${order.item}(s) has been received.`);    
+    });
+},(error)=>{
+    console.error("connection error"+error);  
+})
